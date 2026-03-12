@@ -13,14 +13,16 @@
             font-family: 'Hind Siliguri', sans-serif;
         }
         /* Hidden element for PDF content */
-        #pdf-template {
-            display: none;
+        #pdf-content {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
         }
     </style>
 </head>
-<body class="bg-emerald-50 min-h-screen flex items-center justify-center p-4">
+<body class="bg-emerald-50 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div id="form-container" class="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div id="form-container" class="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
         <!-- Headline 1 & 2 -->
         <div class="bg-emerald-700 p-8 text-center text-white">
             <h1 class="text-3xl md:text-4xl font-bold mb-2">রহমতের ইফতার মাহফিল ২০২৬</h1>
@@ -52,38 +54,29 @@
                     </div>
                 </div>
 
-                <!-- Name Field -->
-                <div>
-                    <label for="name" class="block text-gray-700 font-semibold mb-2">আপনার পূর্ণ নাম</label>
-                    <input type="text" id="name" name="name" placeholder="এখানে নাম লিখুন" 
-                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" required>
-                </div>
-
-                <!-- Phone Field -->
-                <div>
-                    <label for="phone" class="block text-gray-700 font-semibold mb-2">ফোন নম্বর</label>
-                    <input type="tel" id="phone" name="phone" placeholder="০১৭XXXXXXXX" 
-                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" required>
-                </div>
-
-                <!-- Email Field -->
-                <div>
-                    <label for="email" class="block text-gray-700 font-semibold mb-2">ইমেইল আইডি</label>
-                    <input type="email" id="email" name="email" placeholder="example@mail.com" 
-                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" required>
-                </div>
-
-                <!-- Address Field -->
-                <div>
-                    <label for="address" class="block text-gray-700 font-semibold mb-2">বর্তমান ঠিকানা</label>
-                    <textarea id="address" name="address" rows="3" placeholder="গ্রাম/রাস্তা, উপজেলা, জেলা" 
-                              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition" required></textarea>
+                <!-- Fields -->
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">আপনার পূর্ণ নাম</label>
+                        <input type="text" name="name" placeholder="এখানে নাম লিখুন" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">ফোন নম্বর</label>
+                        <input type="tel" name="phone" placeholder="০১৭XXXXXXXX" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">ইমেইল আইডি</label>
+                        <input type="email" name="email" placeholder="example@mail.com" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">বর্তমান ঠিকানা</label>
+                        <textarea name="address" rows="3" placeholder="গ্রাম/রাস্তা, উপজেলা, জেলা" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" required></textarea>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="pt-4">
-                    <button type="submit" id="submitBtn"
-                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition active:scale-95 text-lg flex items-center justify-center">
+                    <button type="submit" id="submitBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition active:scale-95 text-lg flex items-center justify-center">
                         <span id="btnText">তথ্য জমা দিন ও PDF ডাউনলোড করুন</span>
                         <div id="loader" class="hidden animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-3"></div>
                     </button>
@@ -99,33 +92,42 @@
         </div>
     </div>
 
-    <!-- This section is used only for PDF generation (Styled Invitation Card) -->
-    <div id="pdf-content" style="width: 600px; padding: 40px; background: white; border: 10px solid #065f46; font-family: 'Hind Siliguri', sans-serif;">
-        <div style="text-align: center; border-bottom: 2px solid #065f46; padding-bottom: 20px; margin-bottom: 20px;">
-            <h1 style="color: #065f46; font-size: 32px; margin: 0;">ইফতার মাহফিল ২০২৬</h1>
-            <p style="color: #374151; font-size: 18px; margin-top: 5px;">আমন্ত্রণপত্র</p>
+    <!-- Developer Credit Footer with Updated Link -->
+    <footer class="text-center text-gray-600 font-medium pb-8">
+        <p class="text-sm">Developed By 
+            <a href="https://fuzayelqa.github.io/-portfolio/" target="_blank" class="text-emerald-700 font-bold hover:underline">
+                Ozih Uddin AL Fuzayel
+            </a>
+        </p>
+    </footer>
+
+    <!-- PDF Content (Hidden) -->
+    <div id="pdf-content" style="width: 600px; padding: 40px; background: white; border: 12px double #065f46; font-family: 'Hind Siliguri', sans-serif; position: relative;">
+        <div style="text-align: center; border-bottom: 2px solid #065f46; padding-bottom: 20px; margin-bottom: 25px;">
+            <h1 style="color: #065f46; font-size: 34px; margin: 0;">ইফতার মাহফিল ২০২৬</h1>
+            <p style="color: #374151; font-size: 18px; margin-top: 8px; letter-spacing: 2px; text-transform: uppercase;">অফিসিয়াল আমন্ত্রণপত্র</p>
         </div>
         
         <div style="margin-bottom: 30px;">
-            <p style="font-size: 18px; color: #1f2937;">শুভেচ্ছা নিবেন, <strong><span id="pdf-name"></span></strong>,</p>
-            <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">
-                আমরা অত্যন্ত আনন্দের সাথে আপনাকে আমাদের ইফতার মাহফিলে আমন্ত্রণ জানাচ্ছি। আপনার উপস্থিতি আমাদের অনুষ্ঠানকে সার্থক করবে।
+            <p style="font-size: 18px; color: #1f2937;">শুভেচ্ছা নিবেন, <strong style="color: #065f46;"><span id="pdf-name"></span></strong>,</p>
+            <p style="font-size: 16px; color: #4b5563; line-height: 1.8; text-align: justify;">
+                পবিত্র রমজানের এই বরকতময় মুহূর্তে আমরা অত্যন্ত আনন্দের সাথে আপনাকে আমাদের ইফতার মাহফিলে আমন্ত্রণ জানাচ্ছি। আপনার উপস্থিতি আমাদের ভ্রাতৃত্বের বন্ধনকে আরও সুদৃঢ় করবে।
             </p>
         </div>
 
-        <div style="background: #f0fdf4; padding: 20px; border-radius: 10px;">
-            <h4 style="color: #065f46; margin-top: 0; margin-bottom: 10px;">আপনার তথ্য:</h4>
-            <table style="width: 100%; font-size: 14px; color: #374151;">
-                <tr><td style="padding: 5px 0;"><strong>ফোন:</strong></td> <td id="pdf-phone"></td></tr>
-                <tr><td style="padding: 5px 0;"><strong>ইমেইল:</strong></td> <td id="pdf-email"></td></tr>
-                <tr><td style="padding: 5px 0;"><strong>ঠিকানা:</strong></td> <td id="pdf-address"></td></tr>
-                <tr><td style="padding: 5px 0;"><strong>অংশগ্রহণ:</strong></td> <td id="pdf-att"></td></tr>
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 25px; border-radius: 15px; margin-bottom: 30px;">
+            <h4 style="color: #065f46; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #d1d5db; display: inline-block; padding-bottom: 5px;">আপনার নিবন্ধিত তথ্য:</h4>
+            <table style="width: 100%; font-size: 15px; color: #374151; border-spacing: 0 8px;">
+                <tr><td style="width: 120px;"><strong>ফোন:</strong></td> <td id="pdf-phone"></td></tr>
+                <tr><td><strong>ইমেইল:</strong></td> <td id="pdf-email"></td></tr>
+                <tr><td><strong>ঠিকানা:</strong></td> <td id="pdf-address"></td></tr>
+                <tr><td><strong>অবস্থান:</strong></td> <td id="pdf-att" style="color: #059669; font-weight: bold;"></td></tr>
             </table>
         </div>
 
-        <div style="margin-top: 40px; text-align: center; color: #6b7280; font-size: 12px;">
-            <p>আমাদের সাথে থাকার জন্য ধন্যবাদ।</p>
-            <p>© ২০২৬ ইফতার মাহফিল কমিটি</p>
+        <div style="text-align: center; color: #9ca3af; font-size: 11px; border-top: 1px solid #eee; padding-top: 20px;">
+            <p style="margin-bottom: 5px;">আমাদের সাথে থাকার জন্য ধন্যবাদ। © ২০২৬ ইফতার মাহফিল কমিটি</p>
+            <p style="font-size: 10px; color: #065f46;">Developed By Ozih Uddin AL Fuzayel (fuzayelqa.github.io)</p>
         </div>
     </div>
 
@@ -137,39 +139,33 @@
             const btnText = document.getElementById('btnText');
             const loader = document.getElementById('loader');
             
-            // Show loading state
             btn.disabled = true;
             btnText.innerText = "প্রসেসিং হচ্ছে...";
             loader.classList.remove('hidden');
 
-            // Collect form data
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
 
-            // Fill PDF Template with data
             document.getElementById('pdf-name').innerText = data.name;
             document.getElementById('pdf-phone').innerText = data.phone;
             document.getElementById('pdf-email').innerText = data.email;
             document.getElementById('pdf-address').innerText = data.address;
             document.getElementById('pdf-att').innerText = data.attendance;
 
-            // PDF Options
             const element = document.getElementById('pdf-content');
             const opt = {
-                margin:       1,
+                margin:       0.5,
                 filename:     'Iftar_Invitation_2026.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
+                html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
 
-            // Generate PDF
             html2pdf().set(opt).from(element).save().then(() => {
-                // UI Update after completion
                 document.getElementById('iftarForm').classList.add('hidden');
                 document.getElementById('successMessage').classList.remove('hidden');
             }).catch(err => {
-                console.error("PDF Generation Error:", err);
+                console.error(err);
                 btn.disabled = false;
                 btnText.innerText = "আবার চেষ্টা করুন";
                 loader.classList.add('hidden');
