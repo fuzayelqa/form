@@ -12,17 +12,17 @@
         body {
             font-family: 'Hind Siliguri', sans-serif;
         }
-        /* Hidden element for PDF content */
-        #pdf-content {
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
+        /* Style for the preview card to look good on screen */
+        .invitation-card {
+            background: white;
+            border: 12px double #065f46;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
-<body class="bg-emerald-50 min-h-screen flex flex-col items-center justify-center p-4">
+<body class="bg-emerald-50 min-h-screen flex flex-col items-center p-4">
 
-    <div id="form-container" class="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
+    <div id="main-card" class="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden mb-6 mt-4 transition-all duration-500">
         <!-- Headline 1 & 2 -->
         <div class="bg-emerald-700 p-8 text-center text-white">
             <h1 class="text-3xl md:text-4xl font-bold mb-2">রহমতের ইফতার মাহফিল ২০২৬</h1>
@@ -30,8 +30,8 @@
         </div>
 
         <div class="p-6 md:p-10">
-            <!-- 3 Primary Texts -->
-            <div class="mb-8 text-center space-y-3">
+            <!-- 3 Primary Texts (Visible during form fill) -->
+            <div id="intro-texts" class="mb-8 text-center space-y-3">
                 <p class="text-gray-700 text-lg">পবিত্র রমজান মাসে আমরা আপনাদের সাথে ইফতারের আনন্দ ভাগ করে নিতে চাই।</p>
                 <p class="text-gray-700 text-lg">আপনার উপস্থিতি আমাদের এই আয়োজনকে আরও সার্থক ও প্রাণবন্ত করে তুলবে।</p>
                 <p class="text-emerald-700 font-semibold text-lg">নিচের তথ্যগুলো পূরণ করে আপনার আসন নিশ্চিত করুন এবং আপনার ডিজিটাল আমন্ত্রণপত্রটি সংগ্রহ করুন।</p>
@@ -77,59 +77,69 @@
                 <!-- Submit Button -->
                 <div class="pt-4">
                     <button type="submit" id="submitBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition active:scale-95 text-lg flex items-center justify-center">
-                        <span id="btnText">তথ্য জমা দিন ও PDF ডাউনলোড করুন</span>
+                        <span id="btnText">আমন্ত্রণপত্র জেনারেট করুন</span>
                         <div id="loader" class="hidden animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-3"></div>
                     </button>
                 </div>
             </form>
 
-            <!-- Success Message -->
-            <div id="successMessage" class="hidden mt-8 p-6 bg-emerald-100 border border-emerald-400 text-emerald-800 rounded-lg text-center">
-                <h3 class="text-xl font-bold mb-2">অভিনন্দন!</h3>
-                <p>আপনার তথ্য সফলভাবে জমা দেওয়া হয়েছে এবং আমন্ত্রণপত্রটি ডাউনলোড হচ্ছে।</p>
-                <button onclick="location.reload()" class="mt-4 text-emerald-700 underline font-semibold">আবার ফরম পূরণ করুন</button>
+            <!-- Success & PDF Preview Area (Initially Hidden) -->
+            <div id="successArea" class="hidden animate-fade-in">
+                <div class="mb-6 p-4 bg-emerald-100 border border-emerald-400 text-emerald-800 rounded-lg text-center">
+                    <h3 class="text-xl font-bold mb-1">অভিনন্দন!</h3>
+                    <p>আপনার আমন্ত্রণপত্রটি তৈরি হয়েছে। নিচে এটি দেখা যাচ্ছে।</p>
+                </div>
+
+                <!-- Visible PDF/Invitation Card -->
+                <div id="pdf-content" class="invitation-card p-6 md:p-10 mb-8 overflow-hidden">
+                    <div class="text-center border-bottom border-emerald-800 pb-5 mb-6" style="border-bottom: 2px solid #065f46;">
+                        <h1 style="color: #065f46; font-size: 28px; margin: 0; font-weight: bold;">ইফতার মাহফিল ২০২৬</h1>
+                        <p style="color: #374151; font-size: 16px; margin-top: 5px; letter-spacing: 1px;">অফিসিয়াল আমন্ত্রণপত্র</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-lg text-gray-800">শুভেচ্ছা নিবেন, <strong class="text-emerald-800"><span id="pdf-name"></span></strong>,</p>
+                        <p class="text-base text-gray-600 leading-relaxed text-justify mt-2">
+                            পবিত্র রমজানের এই বরকতময় মুহূর্তে আমরা অত্যন্ত আনন্দের সাথে আপনাকে আমাদের ইফতার মাহফিলে আমন্ত্রণ জানাচ্ছি। আপনার উপস্থিতি আমাদের ভ্রাতৃত্বের বন্ধনকে আরও সুদৃঢ় করবে।
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl mb-6">
+                        <h4 class="text-emerald-800 font-bold mb-3 border-b border-gray-300 inline-block pb-1">নিবন্ধিত তথ্য:</h4>
+                        <div class="space-y-2 text-sm text-gray-700">
+                            <p><strong>ফোন:</strong> <span id="pdf-phone"></span></p>
+                            <p><strong>ইমেইল:</strong> <span id="pdf-email"></span></p>
+                            <p><strong>ঠিকানা:</strong> <span id="pdf-address"></span></p>
+                            <p><strong>অবস্থান:</strong> <span id="pdf-att" class="text-emerald-600 font-bold"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="text-center text-gray-400 text-[10px] pt-4 border-t border-gray-100">
+                        <p>© ২০২৬ ইফতার মাহফিল কমিটি</p>
+                        <p class="text-emerald-800 font-semibold mt-1">Developed By Ozih Uddin AL Fuzayel (fuzayelqa.github.io)</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button id="downloadBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center">
+                        PDF ডাউনলোড করুন
+                    </button>
+                    <button onclick="location.reload()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-lg shadow transition">
+                        আবার ফরম পূরণ করুন
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Developer Credit Footer with Updated Link -->
-    <footer class="text-center text-gray-600 font-medium pb-8">
+    <!-- Developer Credit Footer -->
+    <footer class="text-center text-gray-600 font-medium pb-8 mt-auto">
         <p class="text-sm">Developed By 
             <a href="https://fuzayelqa.github.io/-portfolio/" target="_blank" class="text-emerald-700 font-bold hover:underline">
                 Ozih Uddin AL Fuzayel
             </a>
         </p>
     </footer>
-
-    <!-- PDF Content (Hidden) -->
-    <div id="pdf-content" style="width: 600px; padding: 40px; background: white; border: 12px double #065f46; font-family: 'Hind Siliguri', sans-serif; position: relative;">
-        <div style="text-align: center; border-bottom: 2px solid #065f46; padding-bottom: 20px; margin-bottom: 25px;">
-            <h1 style="color: #065f46; font-size: 34px; margin: 0;">ইফতার মাহফিল ২০২৬</h1>
-            <p style="color: #374151; font-size: 18px; margin-top: 8px; letter-spacing: 2px; text-transform: uppercase;">অফিসিয়াল আমন্ত্রণপত্র</p>
-        </div>
-        
-        <div style="margin-bottom: 30px;">
-            <p style="font-size: 18px; color: #1f2937;">শুভেচ্ছা নিবেন, <strong style="color: #065f46;"><span id="pdf-name"></span></strong>,</p>
-            <p style="font-size: 16px; color: #4b5563; line-height: 1.8; text-align: justify;">
-                পবিত্র রমজানের এই বরকতময় মুহূর্তে আমরা অত্যন্ত আনন্দের সাথে আপনাকে আমাদের ইফতার মাহফিলে আমন্ত্রণ জানাচ্ছি। আপনার উপস্থিতি আমাদের ভ্রাতৃত্বের বন্ধনকে আরও সুদৃঢ় করবে।
-            </p>
-        </div>
-
-        <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 25px; border-radius: 15px; margin-bottom: 30px;">
-            <h4 style="color: #065f46; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #d1d5db; display: inline-block; padding-bottom: 5px;">আপনার নিবন্ধিত তথ্য:</h4>
-            <table style="width: 100%; font-size: 15px; color: #374151; border-spacing: 0 8px;">
-                <tr><td style="width: 120px;"><strong>ফোন:</strong></td> <td id="pdf-phone"></td></tr>
-                <tr><td><strong>ইমেইল:</strong></td> <td id="pdf-email"></td></tr>
-                <tr><td><strong>ঠিকানা:</strong></td> <td id="pdf-address"></td></tr>
-                <tr><td><strong>অবস্থান:</strong></td> <td id="pdf-att" style="color: #059669; font-weight: bold;"></td></tr>
-            </table>
-        </div>
-
-        <div style="text-align: center; color: #9ca3af; font-size: 11px; border-top: 1px solid #eee; padding-top: 20px;">
-            <p style="margin-bottom: 5px;">আমাদের সাথে থাকার জন্য ধন্যবাদ। © ২০২৬ ইফতার মাহফিল কমিটি</p>
-            <p style="font-size: 10px; color: #065f46;">Developed By Ozih Uddin AL Fuzayel (fuzayelqa.github.io)</p>
-        </div>
-    </div>
 
     <script>
         document.getElementById('iftarForm').addEventListener('submit', function(e) {
@@ -146,30 +156,33 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
 
+            // Fill Preview with data
             document.getElementById('pdf-name').innerText = data.name;
             document.getElementById('pdf-phone').innerText = data.phone;
             document.getElementById('pdf-email').innerText = data.email;
             document.getElementById('pdf-address').innerText = data.address;
             document.getElementById('pdf-att').innerText = data.attendance;
 
+            // UI Switch: Hide form, show invitation
+            setTimeout(() => {
+                document.getElementById('intro-texts').classList.add('hidden');
+                document.getElementById('iftarForm').classList.add('hidden');
+                document.getElementById('successArea').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800);
+        });
+
+        // Manual PDF Download Trigger
+        document.getElementById('downloadBtn').addEventListener('click', function() {
             const element = document.getElementById('pdf-content');
             const opt = {
-                margin:       0.5,
+                margin:       0.3,
                 filename:     'Iftar_Invitation_2026.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.getElementById('iftarForm').classList.add('hidden');
-                document.getElementById('successMessage').classList.remove('hidden');
-            }).catch(err => {
-                console.error(err);
-                btn.disabled = false;
-                btnText.innerText = "আবার চেষ্টা করুন";
-                loader.classList.add('hidden');
-            });
+            html2pdf().set(opt).from(element).save();
         });
     </script>
 </body>
